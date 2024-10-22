@@ -4,7 +4,6 @@ from fpdf import FPDF
 from NER import getNerHighlightedTexts
 from COMPARE import compare
 from SUMMARIZER import getSummary
-import fitz
 from flask_cors import CORS, cross_origin
 import pymupdf
 import torch
@@ -23,7 +22,7 @@ def highlight_entities_in_pdf(pdf_path, output_path, ner_results, labels):
     label_colors = {label: pymupdf.pdfcolor[color] for label, color in labels}
 
     # Open the input PDF
-    doc = fitz.open(pdf_path)
+    doc = pymupdf.open(pdf_path)
 
     # Iterate through each page in the PDF
     for page_num in range(len(doc)):
@@ -163,7 +162,7 @@ def home():
 def ner():
     pdf_file = request.files['pdfFile']
     print(pdf_file)
-    doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
+    doc = pymupdf.open(stream=pdf_file.read(), filetype="pdf")
 
     all_text = chr(12).join([page.get_text() for page in doc])
         
@@ -213,8 +212,8 @@ def compareboth():
     original_pdf_file = request.files['originalPdfFile']
     template_pdf_file = request.files['templatePdfFile']
 
-    originalDoc = fitz.open(stream=original_pdf_file.read(), filetype="pdf")
-    templateDoc = fitz.open(stream=template_pdf_file.read(), filetype="pdf")
+    originalDoc = pymupdf.open(stream=original_pdf_file.read(), filetype="pdf")
+    templateDoc = pymupdf.open(stream=template_pdf_file.read(), filetype="pdf")
 
     original_all_text = chr(12).join([page.get_text() for page in originalDoc])
     template_all_text = chr(12).join([page.get_text() for page in templateDoc])
@@ -250,7 +249,7 @@ def compareboth():
 def summarize():
     pdf_file = request.files['pdfFile']
     print(pdf_file)
-    doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
+    doc = pymupdf.open(stream=pdf_file.read(), filetype="pdf")
 
     all_text = chr(12).join([page.get_text() for page in doc])
     
@@ -282,7 +281,7 @@ def summarize():
 
 
 def extract_text_from_pdf(pdf_file):
-    document = fitz.open(stream=pdf_file.read(), filetype="pdf")
+    document = pymupdf.open(stream=pdf_file.read(), filetype="pdf")
     text = ""
     for page_num in range(len(document)):
         page = document.load_page(page_num)

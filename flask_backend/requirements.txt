@@ -7,5 +7,5 @@ scikit_learn==1.5.2
 sentence_transformers==3.2.1
 streamlit==1.39.0
 termcolor==2.5.0
-torch==2.4.1+cpu
+torch -f https://download.pytorch.org/whl/cpu
 transformers==4.45.2
